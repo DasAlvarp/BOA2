@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -6,15 +7,11 @@ import java.util.Queue;
  */
 public class BOA
 {
-    public static final int TIME = 2000;
 
-    private Queue EventQueue = new LinkedList<EventItem>();
+
 
     public static void main(String[] args)
     {
-        for(int clock = 0; clock < TIME; clock++)
-        {
-
-        }
+       RealMain rm = new RealMain();
     }
 }
