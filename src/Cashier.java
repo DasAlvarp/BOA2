@@ -34,8 +34,13 @@ public class Cashier
         length -= 1;
     }
 
-    public int getLength()
+    public EventItem pop()
     {
+        length--;
+        return (EventItem)customers.poll();
+    }
+
+    public int getLength() {
         return length;
     }
 
