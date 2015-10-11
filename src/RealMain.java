@@ -55,14 +55,15 @@ public class RealMain
 
             if(temp.type_of_event == -2)
             {
-                System.out.println("Stats!");
+                System.out.println("Stats:");
+                System.out.println("there have been " + customers + " so far.");
                 EQ.add(new EventItem(temp.time_of_day + 500, 0, -2));
             }
             else if(temp.type_of_event == -1)
             {
                 int t = Shortest(cashiers);
 
-                cashiers[t].addItem(temp); //makes new cashiers. Adds a customer to the shoertest cashier's line
+                cashiers[t].addItem(temp); //makes new cashiers. Adds a customer to the shortest cashier's line
                 if(cashiers[t].getLength() == 1)
                 {
                     EQ.add(new EventItem(clock + temp.service_time, temp.service_time, t));//adds departure node that takes 0 time, at end of service of last one, type t, or cashier number.
@@ -71,11 +72,13 @@ public class RealMain
             }
             else
             {
+                customers++;
+
                 EventItem fred = cashiers[temp.type_of_event].pop();
 
                 if(EQ.size() != 0)
                 {
-                    EQ.add(new EventItem(clock + ute.uniform(2,3), ute.uniform(2, 3), temp.type_of_event));
+                    EQ.add(new EventItem(clock + temp.service_time, 0, temp.type_of_event));
                 }
             }
             clock = temp.time_of_day;
