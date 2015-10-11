@@ -1,7 +1,7 @@
 /**
  * Created by Alvarp on 10/11/2015.
  */
-public class EventItem
+public class EventItem implements Comparable
 {
     public int time_of_day;
     public int service_time;
@@ -15,4 +15,19 @@ public class EventItem
     }
 
 
+
+    @Override
+    public int compareTo(Object o)
+    {
+        EventItem temp = (EventItem)o;
+        if(time_of_day > temp.time_of_day)
+        {
+            return 1;
+        }
+        else if(time_of_day == temp.time_of_day)
+        {
+            return  0;
+        }
+        return -1;
+    }
 }

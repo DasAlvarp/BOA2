@@ -1,5 +1,4 @@
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.PriorityQueue;
 
 /**
  * Created by Alvarp on 10/11/2015.
@@ -15,7 +14,7 @@ public class RealMain
 
 
         Cashier[] cashiers = new Cashier[CASHNUM];//number of cashiers
-        Queue EQ = new LinkedList<EventItem>();
+        PriorityQueue<EventItem> EQ = new PriorityQueue<EventItem>();
 
         int customers = 0;
 
@@ -51,7 +50,7 @@ public class RealMain
 
         for(int clock = 0; clock < TIME; clock = clock)
         {
-            EventItem temp = (EventItem)EQ.poll();
+            EventItem temp = EQ.remove();
 
             if(temp.type_of_event == -2)
             {
@@ -61,17 +60,20 @@ public class RealMain
             }
             else if(temp.type_of_event == -1)
             {
-                int t = Shortest(cashiers);
+                //System.out.println("heyo");
+
+                int t = shortest(cashiers);
 
                 cashiers[t].addItem(temp); //makes new cashiers. Adds a customer to the shortest cashier's line
                 if(cashiers[t].getLength() == 1)
                 {
-                    EQ.add(new EventItem(clock + temp.service_time, temp.service_time, t));//adds departure node that takes 0 time, at end of service of last one, type t, or cashier number.
+                    EQ.add(new EventItem(clock + temp.service_time, 0, t));//adds departure node that takes 0 time, at end of service of last one, type t, or cashier number.
                 }
                 EQ.add(makeNewArrival(clock, 3, 2));
             }
             else
             {
+                //System.out.println("ayy lmao");
                 customers++;
 
                 EventItem fred = cashiers[temp.type_of_event].pop();
@@ -93,11 +95,11 @@ public class RealMain
     }
 
 
-    private int Shortest(Cashier[] cashiers)
+    private int shortest(Cashier[] cashiers)
     {
         int sh = 0;
-        int shV = 0;
-        for(int x = 0; x < cashiers.length; x++)
+        int shV = cashiers[0].getLength();
+        for(int x = 1; x < cashiers.length; x++)
         {
             if(cashiers[x].getLength() < shV)
             {
