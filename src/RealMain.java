@@ -41,25 +41,24 @@ public class RealMain
         int totalRemainingPeople = 0;
 
         EQ.add(makeNewArrival(0, 3, 2));
-
+        EQ.add(new EventItem(500, 0, -2));
 
         for(int x = 0; x < CASHNUM; x++)
         {
             cashiers[x] = new Cashier();
         }
 
+
         for(int clock = 0; clock < TIME; clock = clock)
         {
             EventItem temp = (EventItem)EQ.poll();
-/*            for(int x = 0; x < cashiers.length; x++)//time of day shenanigans
-            {
-                if(cashiers[x].maxLength == 0)
-                {
-                    totalIdleTime[x] += temp.time_of_day - clock;
-                }
-            }*/
 
-            if(temp.type_of_event == -1)
+            if(temp.type_of_event == -2)
+            {
+                System.out.println("Stats!");
+                EQ.add(new EventItem(temp.time_of_day + 500, 0, -2));
+            }
+            else if(temp.type_of_event == -1)
             {
                 int t = Shortest(cashiers);
 

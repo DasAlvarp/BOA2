@@ -7,9 +7,6 @@ import java.util.Queue;
  */
 public class BOA
 {
-
-
-
     public static void main(String[] args)
     {
        RealMain rm = new RealMain();
