@@ -13,4 +13,19 @@ public class Utiler
         int range = 2 * variant + 1;
         return small + randy.nextInt(range);
     }
+
+    public int shortest(Cashier[] cashiers)
+    {
+        int sh = 0;
+        int shV = cashiers[0].getLength();
+        for(int x = 1; x < cashiers.length; x++)
+        {
+            if(cashiers[x].getLength() < shV)
+            {
+                shV = cashiers[x].getLength();
+                sh = x;
+            }
+        }
+        return sh;
+    }
 }

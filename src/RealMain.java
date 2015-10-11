@@ -51,18 +51,19 @@ public class RealMain
         for(int clock = 0; clock < TIME; clock = clock)
         {
             EventItem temp = EQ.remove();
+            clock = temp.time_of_day;
+
 
             if(temp.type_of_event == -2)
             {
-                System.out.println("Stats:");
+                System.out.println("Stats on Clock " + clock);
                 System.out.println("there have been " + customers + " so far.");
                 EQ.add(new EventItem(temp.time_of_day + 500, 0, -2));
             }
             else if(temp.type_of_event == -1)
             {
-                //System.out.println("heyo");
 
-                int t = shortest(cashiers);
+                int t = ute.shortest(cashiers);
 
                 cashiers[t].addItem(temp); //makes new cashiers. Adds a customer to the shortest cashier's line
                 if(cashiers[t].getLength() == 1)
@@ -73,17 +74,15 @@ public class RealMain
             }
             else
             {
-                //System.out.println("ayy lmao");
                 customers++;
 
                 EventItem fred = cashiers[temp.type_of_event].pop();
 
-                if(EQ.size() != 0)
+                if(cashiers[temp.type_of_event].getLength() != 0)
                 {
                     EQ.add(new EventItem(clock + temp.service_time, 0, temp.type_of_event));
                 }
             }
-            clock = temp.time_of_day;
         }
     }
 
@@ -95,18 +94,4 @@ public class RealMain
     }
 
 
-    private int shortest(Cashier[] cashiers)
-    {
-        int sh = 0;
-        int shV = cashiers[0].getLength();
-        for(int x = 1; x < cashiers.length; x++)
-        {
-            if(cashiers[x].getLength() < shV)
-            {
-                shV = cashiers[x].getLength();
-                sh = x;
-            }
-        }
-        return sh;
-    }
 }

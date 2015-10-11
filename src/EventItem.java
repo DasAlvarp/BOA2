@@ -14,6 +14,10 @@ public class EventItem implements Comparable
         type_of_event = toe;
     }
 
+    public String toString()
+    {
+        return new String(time_of_day + "\n" + service_time + "\n" + type_of_event);
+    }
 
 
     @Override
