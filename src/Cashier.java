@@ -33,4 +33,10 @@ public class Cashier
         customers.remove();
         length -= 1;
     }
+
+    public int getLength()
+    {
+        return length;
+    }
+
 }
