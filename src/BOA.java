@@ -5,6 +5,6 @@ public class BOA
 {
     public static void main(String[] args)
     {
-       RealMain rm = new RealMain(3, 3, 2, 8, 3, 2000);
+       RealMain rm = new RealMain(2, 3, 2, 8, 3, 2000);
     }
 }

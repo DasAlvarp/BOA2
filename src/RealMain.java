@@ -36,7 +36,7 @@ public class RealMain
         EQ.add(new EventItem(500, 0, -2));
 
 
-        for(int clock = 0; clock < timeLimit; clock = clock)
+        for(int clock = 0; clock <= timeLimit; clock = clock)
         {
 
             EventItem temp = EQ.remove();
@@ -57,11 +57,12 @@ public class RealMain
             if(temp.type_of_event == -2)
             {
                 System.out.println("Stats on Clock " + temp.time_of_day);
-                System.out.println("there have been " + customers + " customers so far.");
-                System.out.println("The % idle time for each cashier has been: ");
+                System.out.println("there have been " + customers + " customers processed.");
                 for(int x = 0; x < cashnum; x++)
                 {
-                    System.out.println("Cashier " + (x + 1) + ": " + totalIdleTime[x]);
+                    System.out.println("Cashier " + (x + 1) + " line: " + cashiers[x].getLength());
+                    double ptod = totalIdleTime[x] * 100 / temp.time_of_day;
+                    System.out.println("% Idle time = " + ptod + "Time units idle: " + totalIdleTime[x]);
                 }
                 System.out.println("\n\n\n");
                 EQ.add(new EventItem(temp.time_of_day + 500, 0, -2));
