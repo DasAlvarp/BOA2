@@ -22,11 +22,14 @@ public class RealMain
 
         int[] specProc = new int[cashnum];
 
-        double[] percentIdleTime = new double[cashnum];
+        int serviceTime = 0;
+        int waitTime = 0;
+        int interArrive = 0;
+        int arrival = 0;
+        int maxWait = 0;
         int[] totalIdleTime = new int[cashnum];
         for(int x = 0; x < cashnum; x++)
         {
-            percentIdleTime[x] = 0;
             totalIdleTime[x] = 0;
             specProc[x] = 0;
             cashiers[x] = new Cashier();
@@ -34,6 +37,7 @@ public class RealMain
 
         EQ.add(makeNewArrival(0, arrivalMean, arrivalVariance));
         EQ.add(new EventItem(500, 0, -2));
+        int prevArrive = EQ.peek().type_of_event;
 
 
         for(int clock = 0; clock <= timeLimit; clock = clock)
@@ -59,6 +63,7 @@ public class RealMain
 
 
 
+
             if(temp.type_of_event == -2)
             {
                 System.out.println("Stats on Clock " + temp.time_of_day);
@@ -69,10 +74,14 @@ public class RealMain
                 System.out.println("\n\n\n");
                 EQ.add(new EventItem(temp.time_of_day + 500, 0, -2));
             }
-            else if(temp.type_of_event == -1)
+            else if(temp.type_of_event == -1)//interArrival time
             {
 
                 int t = ute.shortest(cashiers);
+
+                interArrive += temp.time_of_day - prevArrive;
+                prevArrive = temp.time_of_day;
+                arrival++;
 
                 cashiers[t].addItem(temp); //makes new cashiers. Adds a customer to the shortest cashier's line
 
@@ -84,10 +93,20 @@ public class RealMain
             }
             else
             {
+
                 customers++;
+
 
                 specProc[temp.type_of_event]++;
                 EventItem fred = cashiers[temp.type_of_event].pop();
+                serviceTime += temp.service_time;
+
+                int wait = clock - fred.time_of_day - fred.service_time;
+                waitTime += wait;
+                if(wait > maxWait)
+                {
+                    maxWait = wait;
+                }
 
                 if(cashiers[temp.type_of_event].getLength() != 0)
                 {
@@ -114,13 +133,16 @@ public class RealMain
         for(int x = 0; x < cashnum; x++)
         {
             System.out.println("Cashier " + (x + 1) + " processed " + specProc[x] + " customers.");
-            System.out.println("Cashier " + (x + 1) + " was idle " + ((double)totalIdleTime[x] * 100 / 2000) + "% of the time, or " + totalIdleTime[x] + " time unit(s)");
+            System.out.println("Cashier " + (x + 1) + " was idle " + ((double)totalIdleTime[x] * 100 / 2000) + "% of the time, or " + totalIdleTime[x] + " time unit(s)\n");
             if(cashiers[x].maxLength > maxLength)//finds longest length
             {
                 maxLength = cashiers[x].maxLength;
             }
         }
         System.out.println("The longest length of a cashier line was " + maxLength + ".");
+        System.out.println("The average service time was " + ((double)serviceTime / (double)customers));
+        System.out.println("The average inter-arrival time was " + (double)interArrive / arrival);
+        System.out.println("The max wait time was "+ maxWait);
 
 
     }
