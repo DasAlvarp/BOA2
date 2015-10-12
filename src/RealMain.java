@@ -28,6 +28,7 @@ public class RealMain
         int prevArrive = 0;
         int maxWait = 0;
         int[] totalIdleTime = new int[cashnum];
+        int totalwait = 0;
 
         for(int x = 0; x < cashnum; x++)
         {
@@ -64,7 +65,8 @@ public class RealMain
                 {
                     System.out.println("Cashier " + (x + 1) + " line: " + cashiers[x].getLength());
                 }
-                System.out.println("\n\n\n");
+                System.out.println("Event Queue size: " + EQ.size());
+                System.out.println("\n\n");
                 EQ.add(new EventItem(temp.time_of_day + 500, 0, -2));
             }
             else if(temp.type_of_event == -1)//interArrival time
@@ -81,8 +83,7 @@ public class RealMain
                 interArrive += temp.time_of_day - prevArrive;
                 prevArrive = temp.time_of_day;
                 arrival++;
-                int fred = ute.uniform(arrivalMean, arrivalVariance);
-                EQ.add(new EventItem(temp.time_of_day + fred, ute.uniform(serviceMean, serviceVariance), -1));
+                EQ.add(makeNewArrival(temp.time_of_day, arrivalMean, arrivalVariance));
             }
             else
             {
@@ -95,6 +96,7 @@ public class RealMain
 
                 int wait = clock - fred.time_of_day - fred.service_time;
 
+                totalwait += wait;
                 if(wait > maxWait)
                 {
                     maxWait = wait;
@@ -119,20 +121,22 @@ public class RealMain
          */
         System.out.println("Final Stats:");
         System.out.println("Customers Processed: " + customers);
+        System.out.println("The average inter-arrival time was " + (double)interArrive / arrival);
+        System.out.println("The average service time was " + ((double)serviceTime / (double)customers));
+        System.out.println("The average wait time per customer was " + ((double)totalwait / (double)customers) + "\n");
+
         int maxLength = 0;
         for(int x = 0; x < cashnum; x++)
         {
-            System.out.println("Cashier " + (x + 1) + " processed " + specProc[x] + " customers.");
             System.out.println("Cashier " + (x + 1) + " was idle " + ((double)totalIdleTime[x] * 100 / timeLimit) + "% of the time, or " + totalIdleTime[x] + " time unit(s)\n");
             if(cashiers[x].maxLength > maxLength)//finds longest length
             {
                 maxLength = cashiers[x].maxLength;
             }
         }
-        System.out.println("The longest length of a cashier line was " + maxLength + ".");
-        System.out.println("The average service time was " + ((double)serviceTime / (double)customers));
-        System.out.println("The average inter-arrival time was " + (double)interArrive / arrival);
         System.out.println("The max wait time was " + maxWait);
+        System.out.println("The longest length of a cashier line was " + maxLength + ".");
+        System.out.println("There were " + (arrival - customers) + " people left in the simulation.");
     }
 
     //creates new arrival.
