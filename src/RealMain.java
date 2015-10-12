@@ -20,6 +20,7 @@ public class RealMain
 
         int customers = 0;
 
+        int[] lastTimes = new int[cashnum];
 
         double[] percentIdleTime = new double[cashnum];
         int[] totalIdleTime = new int[cashnum];
@@ -27,30 +28,28 @@ public class RealMain
         {
             percentIdleTime[x] = 0;
             totalIdleTime[x] = 0;
+            lastTimes[x] = 0;
+            cashiers[x] = new Cashier();
         }
 
         EQ.add(makeNewArrival(0, arrivalMean, arrivalVariance));
         EQ.add(new EventItem(500, 0, -2));
-
-        for(int x = 0; x < cashnum; x++)
-        {
-            cashiers[x] = new Cashier();
-        }
 
 
         for(int clock = 0; clock < timeLimit; clock = clock)
         {
 
             EventItem temp = EQ.remove();
-            clock = temp.time_of_day;
-//
-//            for(int x = 0; x < cashnum; x++)
-//            {
-//                if(cashiers[x].getLength() == 0)
-//                {
-//                    totalIdleTime[x] += temp.time_of_day - clock;
-//                }
-//            }
+
+
+            for(int x = 0; x < cashnum; x++)
+            {
+                if(cashiers[x].getLength() == 0)
+                {
+                    totalIdleTime[x] += clock - lastTimes[x];
+                }
+                lastTimes[x] = clock;
+            }
 
 
 
@@ -62,7 +61,7 @@ public class RealMain
                 System.out.println("The % idle time for each cashier has been: ");
                 for(int x = 0; x < cashnum; x++)
                 {
-                    System.out.println("Cashier " + (x + 1) + ": " + cashiers[x].getLength());
+                    System.out.println("Cashier " + (x + 1) + ": " + totalIdleTime[x]);
                 }
                 System.out.println("\n\n\n");
                 EQ.add(new EventItem(temp.time_of_day + 500, 0, -2));
@@ -76,7 +75,7 @@ public class RealMain
 
                 if(cashiers[t].getLength() == 1)
                 {
-                    EQ.add(new EventItem(clock + temp.service_time, 0, t));//adds departure node that takes 0 time, at end of service of last one, type t, or cashier number.
+                    EQ.add(new EventItem(clock + temp.service_time, temp.service_time, t));//adds departure node that takes 0 time, at end of service of last one, type t, or cashier number.
                 }
                 EQ.add(makeNewArrival(clock, arrivalMean, arrivalVariance));
             }
@@ -88,10 +87,10 @@ public class RealMain
 
                 if(cashiers[temp.type_of_event].getLength() != 0)
                 {
-                    EQ.add(new EventItem(clock + temp.service_time, 0, temp.type_of_event));
+                    EQ.add(new EventItem(clock + temp.service_time, temp.service_time, temp.type_of_event));
                 }
             }
-
+            clock = temp.time_of_day;
         }
     }
 
