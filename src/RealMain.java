@@ -25,6 +25,7 @@ public class RealMain
         int serviceTime = 0;
         int interArrive = 0;
         int arrival = 0;
+        int prevArrive = 0;
         int maxWait = 0;
         int[] totalIdleTime = new int[cashnum];
 
@@ -77,10 +78,11 @@ public class RealMain
                     EQ.add(new EventItem(clock + temp.service_time, temp.service_time, t));//adds departure node that takes 0 time, at end of service of last one, type t, or cashier number.
                 }
 
+                interArrive += temp.time_of_day - prevArrive;
+                prevArrive = temp.time_of_day;
                 arrival++;
                 int fred = ute.uniform(arrivalMean, arrivalVariance);
-                interArrive += fred;
-                EQ.add( new EventItem(clock + fred, ute.uniform(serviceMean, serviceVariance), -1));
+                EQ.add(new EventItem(temp.time_of_day + fred, ute.uniform(serviceMean, serviceVariance), -1));
             }
             else
             {
@@ -103,9 +105,9 @@ public class RealMain
                     EQ.add(new EventItem(clock + temp.service_time, temp.service_time, temp.type_of_event));
                 }
             }
-
             clock = temp.time_of_day;
         }
+
         /*
             @end
             Customers processed
@@ -115,7 +117,6 @@ public class RealMain
             max wait time
             max queue length.
          */
-
         System.out.println("Final Stats:");
         System.out.println("Customers Processed: " + customers);
         int maxLength = 0;
