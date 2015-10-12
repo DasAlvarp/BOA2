@@ -23,7 +23,6 @@ public class RealMain
         int[] specProc = new int[cashnum];
 
         int serviceTime = 0;
-        int waitTime = 0;
         int interArrive = 0;
         int arrival = 0;
         int maxWait = 0;
@@ -37,14 +36,11 @@ public class RealMain
 
         EQ.add(makeNewArrival(0, arrivalMean, arrivalVariance));
         EQ.add(new EventItem(500, 0, -2));
-        int prevArrive = EQ.peek().type_of_event;
-
+        int prevArrive = 0;
 
         for(int clock = 0; clock <= timeLimit; clock = clock)
         {
-
             EventItem temp = EQ.remove();
-
 
             for(int x = 0; x < cashnum; x++)
             {
@@ -60,10 +56,6 @@ public class RealMain
             Number of customers in each line
             clock time
             */
-
-
-
-
             if(temp.type_of_event == -2)
             {
                 System.out.println("Stats on Clock " + temp.time_of_day);
@@ -76,12 +68,9 @@ public class RealMain
             }
             else if(temp.type_of_event == -1)//interArrival time
             {
-
                 int t = ute.shortest(cashiers);
 
-                interArrive += temp.time_of_day - prevArrive;
-                prevArrive = temp.time_of_day;
-                arrival++;
+
 
                 cashiers[t].addItem(temp); //makes new cashiers. Adds a customer to the shortest cashier's line
 
@@ -89,20 +78,22 @@ public class RealMain
                 {
                     EQ.add(new EventItem(clock + temp.service_time, temp.service_time, t));//adds departure node that takes 0 time, at end of service of last one, type t, or cashier number.
                 }
+
+                interArrive += temp.time_of_day - prevArrive;
+                prevArrive = temp.time_of_day;
+                arrival++;
+
                 EQ.add(makeNewArrival(clock, arrivalMean, arrivalVariance));
             }
             else
             {
-
                 customers++;
-
 
                 specProc[temp.type_of_event]++;
                 EventItem fred = cashiers[temp.type_of_event].pop();
                 serviceTime += temp.service_time;
 
                 int wait = clock - fred.time_of_day - fred.service_time;
-                waitTime += wait;
                 if(wait > maxWait)
                 {
                     maxWait = wait;
@@ -116,7 +107,6 @@ public class RealMain
 
             clock = temp.time_of_day;
         }
-
         /*
             @end
             Customers processed
@@ -142,18 +132,12 @@ public class RealMain
         System.out.println("The longest length of a cashier line was " + maxLength + ".");
         System.out.println("The average service time was " + ((double)serviceTime / (double)customers));
         System.out.println("The average inter-arrival time was " + (double)interArrive / arrival);
-        System.out.println("The max wait time was "+ maxWait);
-
-
+        System.out.println("The max wait time was " + maxWait);
     }
-
-
 
     //creates new arrival.
-    private EventItem makeNewArrival(int clock, int uniforA, int uniformB)
+    private EventItem makeNewArrival(int clock, int aMean, int aVar)
     {
-        return new EventItem(clock + ute.uniform(uniforA, uniformB), ute.uniform(serviceMean, serviceVariance), -1);
+        return new EventItem(clock + ute.uniform(aMean, aVar), ute.uniform(serviceMean, serviceVariance), -1);
     }
-
-
 }
