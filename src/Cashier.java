@@ -10,12 +10,13 @@ public class Cashier
     private Queue customers;
     public int maxLength;
 
-
+    //constructor
     public Cashier()
     {
         customers = new LinkedList<EventItem>();
     }
 
+    //adds ited E to customrers
     public void addItem(EventItem e)
     {
         customers.add(e);
@@ -24,19 +25,22 @@ public class Cashier
             maxLength = getLength();
         }
     }
+
+    //removes top item from customers
     public void removeItem(EventItem e)
     {
         customers.remove();
     }
 
+    //pops customers
     public EventItem pop()
     {
         return (EventItem)customers.poll();
     }
 
+    //gets lenght of customrers
     public int getLength()
     {
         return customers.size();
     }
-
 }

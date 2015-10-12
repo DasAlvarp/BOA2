@@ -1,12 +1,14 @@
 import java.util.Random;
 
 /**
+ * utility class
  * Created by Alvarp on 10/10/2015.
  */
 public class Utiler
 {
     Random randy = new Random();
 
+    //uniform function as given in sheet
     public int uniform(int ave, int variant)
     {
         int small = ave - variant;
@@ -14,6 +16,7 @@ public class Utiler
         return small + randy.nextInt(range);
     }
 
+    //returns shortest Cashier queue in array of cashiers
     public int shortest(Cashier[] cashiers)
     {
         int sh = 0;
