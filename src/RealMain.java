@@ -94,7 +94,7 @@ public class RealMain
                 EventItem fred = cashiers[temp.type_of_event].pop();
                 serviceTime += fred.service_time;
 
-                int wait = clock - fred.time_of_day - fred.service_time;
+                int wait = temp.time_of_day - fred.time_of_day - fred.service_time;
 
                 totalwait += wait;
                 if(wait > maxWait)
