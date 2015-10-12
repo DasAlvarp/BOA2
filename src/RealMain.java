@@ -75,7 +75,7 @@ public class RealMain
 
                 if(cashiers[t].getLength() == 1)
                 {
-                    EQ.add(new EventItem(clock + temp.service_time, temp.service_time, t));//adds departure node that takes 0 time, at end of service of last one, type t, or cashier number.
+                    EQ.add(new EventItem(temp.time_of_day + temp.service_time, temp.service_time, t));//adds departure node that takes 0 time, at end of service of last one, type t, or cashier number.
                 }
 
                 interArrive += temp.time_of_day - prevArrive;
@@ -102,7 +102,7 @@ public class RealMain
 
                 if(cashiers[temp.type_of_event].getLength() != 0)
                 {
-                    EQ.add(new EventItem(clock + temp.service_time, temp.service_time, temp.type_of_event));
+                    EQ.add(new EventItem(temp.time_of_day + temp.service_time, temp.service_time, temp.type_of_event));
                 }
             }
             clock = temp.time_of_day;
@@ -123,7 +123,7 @@ public class RealMain
         for(int x = 0; x < cashnum; x++)
         {
             System.out.println("Cashier " + (x + 1) + " processed " + specProc[x] + " customers.");
-            System.out.println("Cashier " + (x + 1) + " was idle " + ((double)totalIdleTime[x] * 100 / 2000) + "% of the time, or " + totalIdleTime[x] + " time unit(s)\n");
+            System.out.println("Cashier " + (x + 1) + " was idle " + ((double)totalIdleTime[x] * 100 / timeLimit) + "% of the time, or " + totalIdleTime[x] + " time unit(s)\n");
             if(cashiers[x].maxLength > maxLength)//finds longest length
             {
                 maxLength = cashiers[x].maxLength;
