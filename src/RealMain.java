@@ -27,6 +27,7 @@ public class RealMain
         int arrival = 0;
         int maxWait = 0;
         int[] totalIdleTime = new int[cashnum];
+
         for(int x = 0; x < cashnum; x++)
         {
             totalIdleTime[x] = 0;
@@ -36,9 +37,8 @@ public class RealMain
 
         EQ.add(makeNewArrival(0, arrivalMean, arrivalVariance));
         EQ.add(new EventItem(500, 0, -2));
-        int prevArrive = 0;
 
-        for(int clock = 0; clock <= timeLimit; clock = clock)
+        for(int clock = 0; clock <= timeLimit; clock = clock)//was originally for loop. Bad form, but eh.
         {
             EventItem temp = EQ.remove();
 
@@ -70,8 +70,6 @@ public class RealMain
             {
                 int t = ute.shortest(cashiers);
 
-
-
                 cashiers[t].addItem(temp); //makes new cashiers. Adds a customer to the shortest cashier's line
 
                 if(cashiers[t].getLength() == 1)
@@ -79,21 +77,22 @@ public class RealMain
                     EQ.add(new EventItem(clock + temp.service_time, temp.service_time, t));//adds departure node that takes 0 time, at end of service of last one, type t, or cashier number.
                 }
 
-                interArrive += temp.time_of_day - prevArrive;
-                prevArrive = temp.time_of_day;
                 arrival++;
-
-                EQ.add(makeNewArrival(clock, arrivalMean, arrivalVariance));
+                int fred = ute.uniform(arrivalMean, arrivalVariance);
+                interArrive += fred;
+                EQ.add( new EventItem(clock + fred, ute.uniform(serviceMean, serviceVariance), -1));
             }
             else
             {
                 customers++;
 
                 specProc[temp.type_of_event]++;
+
                 EventItem fred = cashiers[temp.type_of_event].pop();
-                serviceTime += temp.service_time;
+                serviceTime += fred.service_time;
 
                 int wait = clock - fred.time_of_day - fred.service_time;
+
                 if(wait > maxWait)
                 {
                     maxWait = wait;
